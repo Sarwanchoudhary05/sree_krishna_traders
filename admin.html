@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Panel — Sree Krishna Traders</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="css/admin.css"/>
+</head>
+<body class="admin-body">
+
+  <!-- LOGIN SCREEN -->
+  <div class="login-screen" id="loginScreen">
+    <div class="login-box">
+      <div class="login-logo"><span class="logo-gear">⚙</span><div><div class="logo-main">IndoTech Supply</div><div class="logo-sub">Admin Panel</div></div></div>
+      <h2>Sign In</h2>
+      <p class="login-hint">Enter your admin password to continue.</p>
+      <input type="password" id="pwdInput" placeholder="Password" onkeydown="if(event.key==='Enter')doLogin()"/>
+      <button class="btn-primary" onclick="doLogin()">Login →</button>
+      <p class="login-err" id="loginErr"></p>
+      <a href="index.html" class="back-link">← Back to Catalog</a>
+    </div>
+  </div>
+
+  <!-- ADMIN PANEL -->
+  <div class="admin-wrap" id="adminWrap" style="display:none">
+
+    <aside class="sidebar">
+      <div class="sidebar-logo">
+        <span class="logo-gear">⚙</span>
+        <div><div class="logo-main">Sree Krishna Traders</div><div class="logo-sub">Admin</div></div>
+      </div>
+      <nav class="sidebar-nav">
+        <a href="#" class="slink active" onclick="showTab('products',this)">📦 Products</a>
+        <a href="#" class="slink" onclick="showTab('categories',this)">📂 Categories</a>
+        <a href="#" class="slink" onclick="showTab('settings',this)">⚙ Settings</a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="index.html" class="slink">← View Catalog</a>
+        <button class="slink logout-btn" onclick="doLogout()">🚪 Logout</button>
+      </div>
+    </aside>
+
+    <main class="admin-main">
+
+      <!-- PRODUCTS TAB -->
+      <div id="tab-products" class="tab-content">
+        <div class="tab-header">
+          <div>
+            <h1>Products</h1>
+            <p class="tab-sub" id="productCountLabel"></p>
+          </div>
+          <button class="btn-primary" onclick="openProductForm()">+ Add Product</button>
+        </div>
+
+        <!-- Filters -->
+        <div class="admin-toolbar">
+          <input type="text" id="adminSearch" placeholder="🔍 Search products..." oninput="renderAdminProducts()"/>
+          <select id="adminCatFilter" onchange="renderAdminProducts()">
+            <option value="">All Categories</option>
+          </select>
+        </div>
+
+        <div class="admin-table-wrap">
+          <table class="admin-table" id="adminTable">
+            <thead>
+              <tr>
+                <th>Image</th>
+                <th>Code</th>
+                <th>Name</th>
+                <th>Category</th>
+                <th>Price</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- CATEGORIES TAB -->
+      <div id="tab-categories" class="tab-content" style="display:none">
+        <div class="tab-header">
+          <div><h1>Categories</h1><p class="tab-sub">Manage product categories</p></div>
+          <button class="btn-primary" onclick="openCatForm()">+ Add Category</button>
+        </div>
+        <div class="cat-list" id="catList"></div>
+      </div>
+
+      <!-- SETTINGS TAB -->
+      <div id="tab-settings" class="tab-content" style="display:none">
+        <div class="tab-header"><div><h1>Settings</h1><p class="tab-sub">Store configuration</p></div></div>
+        <div class="settings-card">
+          <h3>Store Information</h3>
+          <div class="settings-grid">
+            <div class="form-group"><label>Store Name</label><input type="text" id="set-name" placeholder="IndoTech Supply"/></div>
+            <div class="form-group"><label>Phone</label><input type="text" id="set-phone" placeholder="+91 98765 43210"/></div>
+            <div class="form-group"><label>Email</label><input type="text" id="set-email" placeholder="info@store.com"/></div>
+            <div class="form-group"><label>Address</label><input type="text" id="set-address" placeholder="123, Industrial Area, Ajmer"/></div>
+          </div>
+          <button class="btn-primary" onclick="saveSettings()">Save Settings</button>
+        </div>
+        <div class="settings-card danger-zone">
+          <h3>⚠ Danger Zone</h3>
+          <p>Reset all product &amp; category data to defaults. This cannot be undone.</p>
+          <button class="btn-danger" onclick="resetAllData()">Reset to Default Data</button>
+        </div>
+        <div class="settings-card">
+          <h3>Change Admin Password</h3>
+          <div class="form-group"><label>Current Password</label><input type="password" id="cur-pwd"/></div>
+          <div class="form-group"><label>New Password</label><input type="password" id="new-pwd"/></div>
+          <div class="form-group"><label>Confirm New Password</label><input type="password" id="con-pwd"/></div>
+          <button class="btn-primary" onclick="changePassword()">Update Password</button>
+        </div>
+      </div>
+
+    </main>
+  </div>
+
+  <!-- PRODUCT FORM MODAL -->
+  <div class="overlay" id="formOverlay" onclick="closeForm()" style="display:none">
+    <div class="form-modal" onclick="event.stopPropagation()">
+      <div class="form-modal-header">
+        <h2 id="formTitle">Add Product</h2>
+        <button onclick="closeForm()">✕</button>
+      </div>
+      <div class="form-modal-body">
+        <input type="hidden" id="f-id"/>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Product Code *</label>
+            <input type="text" id="f-code" placeholder="e.g. BRG-6205-ZZ"/>
+          </div>
+          <div class="form-group">
+            <label>Category *</label>
+            <select id="f-cat"></select>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Product Name *</label>
+          <input type="text" id="f-name" placeholder="e.g. Deep Groove Ball Bearing 6205 ZZ"/>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Brand</label>
+            <input type="text" id="f-brand" placeholder="e.g. SKF / NSK"/>
+          </div>
+          <div class="form-group">
+            <label>Price</label>
+            <input type="text" id="f-price" placeholder="e.g. ₹120 or ₹120/pc"/>
+          </div>
+        </div>
+
+        <div class="form-row-2">
+          <div class="form-group">
+            <label>Badge (optional)</label>
+            <input type="text" id="f-badge" placeholder="e.g. POPULAR, NEW, SALE"/>
+          </div>
+          <div class="form-group">
+            <label>Icon / Emoji</label>
+            <input type="text" id="f-icon" placeholder="e.g. 🔩 🔧 ⚡"/>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label>Tags (comma separated)</label>
+          <input type="text" id="f-tags" placeholder="e.g. 25mm, Double Shield, Chrome Steel"/>
+        </div>
+
+        <div class="form-group">
+          <label>Description</label>
+          <textarea id="f-desc" rows="3" placeholder="Short product description..."></textarea>
+        </div>
+
+        <!-- PRODUCT IMAGE -->
+        <div class="form-group">
+          <label>Product Image</label>
+          <div class="img-upload-area" id="imgUploadArea" onclick="document.getElementById('f-img-file').click()">
+            <div class="img-preview" id="imgPreview">
+              <span>📷</span>
+              <p>Click to upload photo<br><small>JPG, PNG, WEBP — Max 2MB</small></p>
+            </div>
+          </div>
+          <input type="file" id="f-img-file" accept="image/*" style="display:none" onchange="handleImgUpload(event)"/>
+          <button type="button" class="btn-sm-outline" onclick="clearImage()" id="clearImgBtn" style="display:none;margin-top:8px">✕ Remove Image</button>
+        </div>
+
+        <!-- SPECIFICATIONS -->
+        <div class="form-group">
+          <label>Specifications <small style="color:var(--text-muted)">(key–value pairs)</small></label>
+          <div id="specsContainer"></div>
+          <button type="button" class="btn-sm-outline" onclick="addSpecRow()">+ Add Spec</button>
+        </div>
+
+        <!-- SIZE CHART (for V-belts, bearings etc.) -->
+        <div class="form-group">
+          <label>
+            <input type="checkbox" id="f-has-sizes" onchange="toggleSizeChart()"/>
+            &nbsp;This product has a Size Chart (e.g. V-belts, Chains)
+          </label>
+          <div id="sizeChartWrap" style="display:none;margin-top:12px">
+            <div class="size-chart-header">
+              <div class="form-row-2" style="margin-bottom:8px">
+                <input type="text" id="sc-col1" placeholder="Column 1 (e.g. Belt No.)" />
+                <input type="text" id="sc-col2" placeholder="Column 2 (e.g. Size)" />
+              </div>
+              <div class="form-row-2">
+                <input type="text" id="sc-col3" placeholder="Column 3 (e.g. Length mm)" />
+                <input type="text" id="sc-col4" placeholder="Column 4 (e.g. Price) optional" />
+              </div>
+            </div>
+            <div id="sizeRowsContainer"></div>
+            <button type="button" class="btn-sm-outline" onclick="addSizeRow()">+ Add Row</button>
+          </div>
+        </div>
+
+      </div>
+      <div class="form-modal-footer">
+        <button class="btn-outline" onclick="closeForm()">Cancel</button>
+        <button class="btn-primary" onclick="saveProduct()">Save Product</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CATEGORY FORM MODAL -->
+  <div class="overlay" id="catFormOverlay" onclick="closeCatForm()" style="display:none">
+    <div class="form-modal small-modal" onclick="event.stopPropagation()">
+      <div class="form-modal-header">
+        <h2 id="catFormTitle">Add Category</h2>
+        <button onclick="closeCatForm()">✕</button>
+      </div>
+      <div class="form-modal-body">
+        <input type="hidden" id="cf-id"/>
+        <div class="form-group"><label>Category Name *</label><input type="text" id="cf-name" placeholder="e.g. Bearings"/></div>
+        <div class="form-group"><label>Icon / Emoji *</label><input type="text" id="cf-icon" placeholder="e.g. 🔩"/></div>
+      </div>
+      <div class="form-modal-footer">
+        <button class="btn-outline" onclick="closeCatForm()">Cancel</button>
+        <button class="btn-primary" onclick="saveCategory()">Save Category</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+  <div class="confirm-overlay" id="confirmOverlay" style="display:none">
+    <div class="confirm-box">
+      <h3 id="confirmTitle">Are you sure?</h3>
+      <p id="confirmMsg"></p>
+      <div class="confirm-btns">
+        <button class="btn-outline" onclick="closeConfirm()">Cancel</button>
+        <button class="btn-danger" id="confirmOk">Delete</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/defaultData.js"></script>
+  <script src="js/admin.js"></script>
+</body>
+</html>

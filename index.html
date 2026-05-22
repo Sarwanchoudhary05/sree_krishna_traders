@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Sree Krishna Traders — Industrial & Hardware Catalog</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700;900&family=Barlow:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css"/>
+</head>
+<body>
+  <header id="header">
+    <div class="header-inner">
+      <div class="logo">
+        <span class="logo-gear">⚙</span>
+        <div>
+          <div class="logo-main">Sree Krishna Traders</div>
+          <div class="logo-sub">Industrial · Hardware · Electronics</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#home">Home</a>
+        <a href="#catalog">Catalog</a>
+        <a href="#contact">Contact</a>
+        <a href="admin.html" class="nav-admin">⚙ Admin</a>
+      </nav>
+      <button class="btn-quote" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">Get Quote</button>
+      <button class="hamburger" onclick="toggleMobile()">☰</button>
+    </div>
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#home" onclick="toggleMobile()">Home</a>
+      <a href="#catalog" onclick="toggleMobile()">Catalog</a>
+      <a href="#contact" onclick="toggleMobile()">Contact</a>
+      <a href="admin.html">⚙ Admin Panel</a>
+    </div>
+  </header>
+
+  <section id="home" class="hero">
+    <div class="hero-grid-bg"></div>
+    <div class="hero-content">
+      <div class="hero-tag">Sangareddy District Patancheru(m),Sai Arcade Opp. G. K. Wire Limited, Bpl. Road</div>
+      <h1>Your Complete<br><em>Industrial &amp; Hardware</em><br>Supplier</h1>
+      <p>Bearings, V-Belts, Tools, Electrical, Fasteners &amp; more — quality products, competitive pricing, expert support.</p>
+      <div class="hero-btns">
+        <a href="#catalog" class="btn-primary">Browse Catalog</a>
+        <a href="#contact" class="btn-outline">Enquire Now</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat"><b id="statProducts">—</b><span>Products</span></div>
+        <div class="sdiv"></div>
+        <div class="stat"><b>50+</b><span>Brands</span></div>
+        <div class="sdiv"></div>
+        <div class="stat"><b>15+</b><span>Years</span></div>
+      </div>
+    </div>
+    <div class="hero-right">
+      <div class="gear-wrap">
+        <div class="g1">⚙</div><div class="g2">⚙</div><div class="g3">⚙</div>
+        <div class="hero-emblem">🏭</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CATEGORY PILLS -->
+  <section class="cat-bar-section">
+    <div class="cat-bar" id="catBar"></div>
+  </section>
+
+  <!-- CATALOG -->
+  <section id="catalog" class="catalog-section">
+    <div class="section-label">OUR PRODUCTS</div>
+    <h2 class="section-title">Product Catalog</h2>
+    <div class="toolbar">
+      <div class="search-box">
+        <span>🔍</span>
+        <input type="text" id="searchInput" placeholder="Search by name, brand, code, size..." oninput="applyFilters()"/>
+        <button class="clear-btn" id="clearBtn" onclick="clearSearch()" style="display:none">✕</button>
+      </div>
+      <div class="result-count" id="resultCount"></div>
+    </div>
+    <div class="products-grid" id="productsGrid"></div>
+    <div class="empty-state" id="emptyState" style="display:none">
+      <div>🔎</div>
+      <h3>No products found</h3>
+      <p>Try a different keyword or category.</p>
+      <button class="btn-outline" onclick="resetFilters()">Clear Filters</button>
+    </div>
+  </section>
+
+  <!-- WHY US -->
+  <section class="why-section">
+    <div class="why-inner">
+      <div class="section-label">WHY CHOOSE US</div>
+      <h2 class="section-title">Built for Industry</h2>
+      <div class="why-grid">
+        <div class="why-card"><span>🏭</span><h4>Industrial Grade</h4><p>Products from verified manufacturers, tested for performance.</p></div>
+        <div class="why-card"><span>🚚</span><h4>Fast Dispatch</h4><p>Quick delivery for bulk and retail orders across Rajasthan.</p></div>
+        <div class="why-card"><span>💰</span><h4>Best Pricing</h4><p>Competitive rates with discounts for dealers &amp; contractors.</p></div>
+        <div class="why-card"><span>🛠️</span><h4>Expert Support</h4><p>Our team helps you choose the right part for every job.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section id="contact" class="contact-section">
+    <div class="section-label">REACH US</div>
+    <h2 class="section-title">Contact &amp; Enquiry</h2>
+    <div class="contact-wrap">
+      <div class="contact-info">
+        <div class="ci"><span>📍</span><div><b>Address</b><p>Sangareddy District Patancheru(m),Sai Arcade Opp. G. K. Wire Limited, Bpl. Road 502307</p></div></div>
+        <div class="ci"><span>📞</span><div><b>Phone</b><p>+91 9866347955</p></div></div>
+        <div class="ci"><span>✉️</span><div><b>Email</b><p>sreekrishnatraders102@gmail.com</p></div></div>
+        <div class="ci"><span>🕐</span><div><b>Hours</b><p>Mon–Sat: 7:00 AM – 9:00 PM sun: 7:00AM - 1:00PM</p></div></div>
+      </div>
+      <form class="contact-form" onsubmit="submitForm(event)">
+        <div class="frow">
+          <input type="text" placeholder="Your Name *" required/>
+          <input type="tel" placeholder="Phone Number *" required/>
+        </div>
+        <input type="email" placeholder="Email Address"/>
+        <select id="catSelect"><option value="">Select Product Category</option></select>
+        <textarea placeholder="Describe your requirement or product code..." rows="4" id="enquiryMsg"></textarea>
+        <button type="submit" class="btn-primary">Send Enquiry →</button>
+      </form>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="footer-logo"><span class="logo-gear" style="font-size:20px">⚙</span> Sree Krishna Traders</div>
+      <p>© 2025 Sree krishna Traders · Sangareddy, Telangana</p>
+    </div>
+  </footer>
+
+  <!-- PRODUCT MODAL -->
+  <div class="overlay" id="overlay" onclick="closeModal()">
+    <div class="modal" id="modal" onclick="event.stopPropagation()">
+      <button class="modal-close" onclick="closeModal()">✕</button>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="js/storage.js"></script>
+  <script src="js/defaultData.js"></script>
+  <script src="js/catalog.js"></script>
+</body>
+</html>
